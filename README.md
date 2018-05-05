@@ -28,3 +28,4 @@ go run main.go < sample-with-broken-utf8.csv
 * Retrieving text from strings is not currently supported. The following lines were removed from each of the files for testing:
   * **sample.csv** - 11/11/11 11:11:11 AM,überTown,10001,Prompt Negotiator,1:23:32.123,1:32:33.123,zzsasdfa,"I’m just gonna say, this is AMAZING. WHAT NEGOTIATIONS."
   * **sample-with-broken-utf8.csv** - 11/11/11 11:11:11 AM,√ºberTown,10001,Prompt Negotiator,1:23:32.123,1:32:33.123,zzsasdfa,"I‚Äôm just gonna say, this is AMAZING. WHAT NEGOTIATIONS."
+  * Some of the functions inside `main.go` could have been moved to another file (e.g. `utils.go`) to make the code more modular.
