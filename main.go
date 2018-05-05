@@ -47,10 +47,10 @@ func main() {
 }
 
 func printCSV(rows []string) {
-	convertToEasternTime(rows[7])         // Timestamp 7
-	fmt.Println(rows[6])                  // Address 6
-	prefixZipcode(rows[5])                // ZIP 5
-	fmt.Println(strings.ToUpper(rows[4])) // FullName 4
+	convertToEasternTime("Timestamp: " + rows[7])        // Timestamp 7
+	fmt.Println("Address: " + rows[6])                   // Address 6
+	prefixZipcode("ZIP: " + rows[5])                     // ZIP 5
+	fmt.Println("FullName: " + strings.ToUpper(rows[4])) // FullName 4
 
 	// FooDuration 3
 	// fmt.Println(rows[3])
@@ -70,8 +70,8 @@ func printCSV(rows []string) {
 	microseconds := strings.Split(duration[2], ".")[1]
 	convertToSeconds(hours, minutes, seconds, microseconds)
 
-	fmt.Println(rows[1]) // TotalDuration 1
-	fmt.Println(rows[0]) // Notes 0
+	fmt.Println("TotalDuration: " + rows[1]) // TotalDuration 1
+	fmt.Println("Notes: " + rows[0])         // Notes 0
 }
 
 // Convert from HH:MM:SS.MS format to floating point seconds format
@@ -87,7 +87,7 @@ func convertToSeconds(hours, minutes, seconds, microseconds string) {
 	buffer.WriteString(".")
 	buffer.WriteString(microseconds)
 
-	fmt.Println(buffer.String())
+	fmt.Println("BarDuration: " + buffer.String())
 }
 
 // Format ZIP codes as 5 digits
