@@ -14,17 +14,17 @@ The entire CSV is in the UTF-8 character set and the following fields were norma
 - [ ] The column "Notes" is free form text input by end-users; please do not perform any transformations on this column. If there are invalid UTF-8 characters, please replace them with the Unicode Replacement Character.
 
 ## Running the program
-Read in *sample.csv* via stdin:
+Read in **sample.csv** via stdin:
 ```
 go run main.go < sample.csv
 ```
 
-Read in *sample-with-broken-utf8.csv* via stdin:
+Read in **sample-with-broken-utf8.csv** via stdin:
 ```
 go run main.go < sample-with-broken-utf8.csv
 ```
 
 ## Notes
-* The following lines were removed from each of the files for testing:
-  * sample.csv - 11/11/11 11:11:11 AM,überTown,10001,Prompt Negotiator,1:23:32.123,1:32:33.123,zzsasdfa,"I’m just gonna say, this is AMAZING. WHAT NEGOTIATIONS."
-  * sample-with-broken-utf8.cs - 11/11/11 11:11:11 AM,√ºberTown,10001,Prompt Negotiator,1:23:32.123,1:32:33.123,zzsasdfa,"I‚Äôm just gonna say, this is AMAZING. WHAT NEGOTIATIONS."
+* Retrieving text from strings is not currently supported. The following lines were removed from each of the files for testing:
+  * **sample.csv** - 11/11/11 11:11:11 AM,überTown,10001,Prompt Negotiator,1:23:32.123,1:32:33.123,zzsasdfa,"I’m just gonna say, this is AMAZING. WHAT NEGOTIATIONS."
+  * **sample-with-broken-utf8.csv** - 11/11/11 11:11:11 AM,√ºberTown,10001,Prompt Negotiator,1:23:32.123,1:32:33.123,zzsasdfa,"I‚Äôm just gonna say, this is AMAZING. WHAT NEGOTIATIONS."
