@@ -14,12 +14,12 @@ The entire CSV is in the UTF-8 character set and the following fields were norma
 - [ ] The column "Notes" is free form text input by end-users; please do not perform any transformations on this column. If there are invalid UTF-8 characters, please replace them with the Unicode Replacement Character.
 
 ## Running the program
-Read in **sample.csv** via stdin:
+Read in **sample.csv** via `stdin`:
 ```
 go run main.go < sample.csv
 ```
 
-Read in **sample-with-broken-utf8.csv** via stdin:
+Read in **sample-with-broken-utf8.csv** via `stdin`:
 ```
 go run main.go < sample-with-broken-utf8.csv
 ```
