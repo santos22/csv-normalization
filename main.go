@@ -6,11 +6,12 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
 
-var columns []string
+var rows []string
 
 func main() {
 	ignoreTitle := true
@@ -30,17 +31,14 @@ func main() {
 		// returns index of ',' between Timestamp and Address
 		i := strings.Index(example, ",")
 
-		// convert string to rune slice
+		// convert string to rune slice to retrieve substrings
 		runes := []rune(example)
 
-		//printColumns(columns)
-		columns = append(columns, string(runes[i+1:]))
-		columns = append(columns, string(runes[:i]))
-		printColumns(columns)
-		//fmt.Println(string(runes[i+1:])) // get Address value
-		//fmt.Println(string(runes[:i]))   // get Timestamp value
+		rows = append(rows, string(runes[i+1:])) // append Address value
+		rows = append(rows, string(runes[:i]))   // append Timestamp value
+		printCSV(rows)
 		fmt.Println("=============================================")
-		columns = columns[:0] // clear columns slice
+		rows = rows[:0] // clear rows slice
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -48,39 +46,52 @@ func main() {
 	}
 }
 
-func printColumns(columns []string) {
-	// Notes 0
-	// TotalDuration 1
-	// BarDuration 2
-	// FooDuration 3
-	// FullName 4
-	// ZIP 5
-	// Address 6
-	// Timestamp 7
+func printCSV(rows []string) {
+	convertToEasternTime(rows[7])         // Timestamp 7
+	fmt.Println(rows[6])                  // Address 6
+	prefixZipcode(rows[5])                // ZIP 5
+	fmt.Println(strings.ToUpper(rows[4])) // FullName 4
 
-	// for _, value := range columns {
-	// 	fmt.Println(value)
-	// }
-	//convertToEasternTime(columns[7])
-	//prefixZipcode(columns[5])
-	//fmt.Println(strings.ToUpper(columns[4]))
-	fmt.Println(columns[2])
-	//t, _ := time.Parse("5:04:05.000Z", columns[2])
-	//fmt.Println(t.Format("150405"))
-	//fmt.Println(t)
-	duration := strings.Split(columns[2], ":")
-	fmt.Println(duration)
+	// FooDuration 3
+	// fmt.Println(rows[3])
+	// duration := strings.Split(rows[3], ":")
+	// fmt.Println(duration)
+	// hours := duration[0]
+	// minutes := duration[1]
+	// seconds := strings.Split(duration[3], ".")[0]
+	// microseconds := strings.Split(duration[3], ".")[1]
+	// convertToSeconds(hours, minutes, seconds, microseconds)
+
+	// BarDuration 2 in HH:MM:SS.MS format
+	duration := strings.Split(rows[2], ":")
 	hours := duration[0]
 	minutes := duration[1]
 	seconds := strings.Split(duration[2], ".")[0]
 	microseconds := strings.Split(duration[2], ".")[1]
-	fmt.Println(hours + minutes + seconds + microseconds)
+	convertToSeconds(hours, minutes, seconds, microseconds)
+
+	fmt.Println(rows[1]) // TotalDuration 1
+	fmt.Println(rows[0]) // Notes 0
 }
 
-func convertToSeconds(durationTime string) {
+// Convert from HH:MM:SS.MS format to floating point seconds format
+func convertToSeconds(hours, minutes, seconds, microseconds string) {
+	hoursInSeconds, _ := strconv.Atoi(hours)
+	minutesInSeconds, _ := strconv.Atoi(minutes)
+	formattedSeconds, _ := strconv.Atoi(seconds)
+	formattedSeconds = formattedSeconds + (hoursInSeconds * 3600) + (minutesInSeconds * 60)
 
+	var buffer bytes.Buffer
+
+	buffer.WriteString(strconv.Itoa(formattedSeconds))
+	buffer.WriteString(".")
+	buffer.WriteString(microseconds)
+
+	fmt.Println(buffer.String())
 }
 
+// Format ZIP codes as 5 digits
+// If there are less than 5 digits, assume 0 as the prefix
 func prefixZipcode(zipcode string) {
 	var buffer bytes.Buffer
 
@@ -92,6 +103,9 @@ func prefixZipcode(zipcode string) {
 	fmt.Println(buffer.String())
 }
 
+// Format timestamp values to ISO-8601
+// and convert to US/Eastern
+// Accounts for 8 different formats
 func convertToEasternTime(timeStamp string) {
 	if len(timeStamp) == 18 {
 		t, _ := time.Parse("1/02/06 3:04:05 PM", timeStamp)
@@ -138,7 +152,8 @@ func convertToEasternTime(timeStamp string) {
 	}
 }
 
-// start from right of row to retrieve column values
+// Start from right of row to recursively retrieve column values
+// TODO: Handle retrieving text between quotes
 func retrieveColumnValues(commaCount int, column string) string {
 	if commaCount == 6 {
 		return column
@@ -148,25 +163,22 @@ func retrieveColumnValues(commaCount int, column string) string {
 	r, _ := regexp.Compile("\"([^\"]*)\"")
 
 	var columnValue string
-	//var i int
 	indices := r.FindStringIndex(column)
 	if indices != nil {
+		// If end index equal to end of row, Notes field is in quotes
 		if indices[1] == len(column) {
-			// Notes
 			fmt.Println(indices)
 			fmt.Println(len(column))
 			fmt.Println(column[indices[0]:indices[1]])
 			fmt.Println(indices[0] - 1)
 			columnValue = column[indices[0]:indices[1]]
-			//i = indices[0] - 1
 		}
 	}
 
 	i := strings.LastIndex(column, ",")
-	//fmt.Println(i)
 	columnValue = column[i+1 : len(column)]
 
-	columns = append(columns, columnValue)
+	rows = append(rows, columnValue)
 	commaCount = commaCount + 1
 	return retrieveColumnValues(commaCount, column[:i])
 }
