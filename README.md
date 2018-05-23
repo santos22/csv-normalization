@@ -30,3 +30,4 @@ go run main.go < sample-with-broken-utf8.csv
   * **sample-with-broken-utf8.csv** - 11/11/11 11:11:11 AM,√ºberTown,10001,Prompt Negotiator,1:23:32.123,1:32:33.123,zzsasdfa,"I‚Äôm just gonna say, this is AMAZING. WHAT NEGOTIATIONS."
   * Some of the formatting methods inside `main.go` could have been moved to another file (e.g. `utils.go`) to make the code more modular.
   * If `stdin` wasn't required, I could've leveraged the following library to work with the CSV files provided - https://github.com/360EntSecGroup-Skylar/excelize. This would have made parsing the fields easier and I could've focused more of my efforts on normalizing/formatting the data.
+  * Unit tests would've helped!
