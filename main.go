@@ -47,9 +47,11 @@ func main() {
 }
 
 func printCSV(rows []string) {
-	convertToEasternTime("Timestamp: " + rows[7])        // Timestamp 7
+	fmt.Print("Timestamp: ")
+	convertToEasternTime(rows[7])      // Timestamp 7
 	fmt.Println("Address: " + rows[6])                   // Address 6
-	prefixZipcode("ZIP: " + rows[5])                     // ZIP 5
+	fmt.Print("ZIP: ")
+	prefixZipcode(rows[5])   
 	fmt.Println("FullName: " + strings.ToUpper(rows[4])) // FullName 4
 
 	// FooDuration 3
